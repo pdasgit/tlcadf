@@ -1,0 +1,11 @@
+{
+	"name": "Telecare_anon",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Anonymized Telecare DB",
+		"type": "AzurePostgreSql",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}

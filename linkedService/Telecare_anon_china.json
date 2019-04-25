@@ -1,0 +1,10 @@
+{
+	"name": "Telecare_anon_china",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzurePostgreSql",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}

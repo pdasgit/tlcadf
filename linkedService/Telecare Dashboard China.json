@@ -1,0 +1,10 @@
+{
+	"name": "Telecare Dashboard China",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}

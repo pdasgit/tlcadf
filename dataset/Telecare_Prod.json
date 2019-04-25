@@ -1,0 +1,14 @@
+{
+	"name": "Telecare_Prod",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Telecare_anon",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzurePostgreSqlTable",
+		"typeProperties": {
+			"tableName": "\"public\".\"hcp\""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

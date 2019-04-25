@@ -1,0 +1,10 @@
+{
+	"name": "Telecare Dashboard",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}
