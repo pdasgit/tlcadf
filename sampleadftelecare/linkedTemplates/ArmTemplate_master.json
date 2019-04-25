@@ -1,0 +1,125 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "sampleadftelecare"
+		},
+		"AzurePostgreSqlClaus_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzurePostgreSqlClaus'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
+		},
+		"Telecare Dashboard China_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare Dashboard China'"
+		},
+		"Telecare Dashboard_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare Dashboard'"
+		},
+		"Telecare_Internal_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_Internal'"
+		},
+		"Telecare_Internal_China_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_Internal_China'"
+		},
+		"Telecare_anon_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_anon'"
+		},
+		"Telecare_anon_china_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_anon_china'"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas Token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"AzureSqlDatabase2_connectionString": {
+						"value": "[parameters('AzureSqlDatabase2_connectionString')]"
+					},
+					"Telecare Dashboard China_connectionString": {
+						"value": "[parameters('Telecare Dashboard China_connectionString')]"
+					},
+					"Telecare Dashboard_connectionString": {
+						"value": "[parameters('Telecare Dashboard_connectionString')]"
+					},
+					"Telecare_Internal_connectionString": {
+						"value": "[parameters('Telecare_Internal_connectionString')]"
+					},
+					"Telecare_Internal_China_connectionString": {
+						"value": "[parameters('Telecare_Internal_China_connectionString')]"
+					},
+					"Telecare_anon_connectionString": {
+						"value": "[parameters('Telecare_anon_connectionString')]"
+					},
+					"Telecare_anon_china_connectionString": {
+						"value": "[parameters('Telecare_anon_china_connectionString')]"
+					},
+					"AzurePostgreSqlClaus_connectionString": {
+						"value": "[parameters('AzurePostgreSqlClaus_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		}
+	]
+}

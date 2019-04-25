@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "sampleadftelecare"
+		},
+		"AzurePostgreSqlClaus_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
+		"Telecare Dashboard China_connectionString": {
+			"value": ""
+		},
+		"Telecare Dashboard_connectionString": {
+			"value": ""
+		},
+		"Telecare_Internal_connectionString": {
+			"value": ""
+		},
+		"Telecare_Internal_China_connectionString": {
+			"value": ""
+		},
+		"Telecare_anon_connectionString": {
+			"value": ""
+		},
+		"Telecare_anon_china_connectionString": {
+			"value": ""
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

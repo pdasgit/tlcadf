@@ -1,0 +1,1073 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "sampleadftelecare"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
+		},
+		"Telecare Dashboard China_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare Dashboard China'"
+		},
+		"Telecare Dashboard_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare Dashboard'"
+		},
+		"Telecare_Internal_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_Internal'"
+		},
+		"Telecare_Internal_China_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_Internal_China'"
+		},
+		"Telecare_anon_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_anon'"
+		},
+		"Telecare_anon_china_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Telecare_anon_china'"
+		},
+		"AzurePostgreSqlClaus_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzurePostgreSqlClaus'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare Dashboard China')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare Dashboard China_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare Dashboard')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare Dashboard_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Internal')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare_Internal_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Internal_China')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare_Internal_China_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_anon')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Anonymized Telecare DB",
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare_anon_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_anon_china')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"typeProperties": {
+					"connectionString": "[parameters('Telecare_anon_china_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntimeClaus')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dashboard')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare Dashboard",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare Dashboard')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dashboard_China')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare Dashboard China",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare Dashboard China')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Internal')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare_Internal",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"typeProperties": {
+					"tableName": "dummyName"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare_Internal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Internal_China')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare_Internal_China",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare_Internal_China')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Prod')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare_anon",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"typeProperties": {
+					"tableName": "\"public\".\"hcp\""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare_anon')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Telecare_Prod_China')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Telecare_anon_china",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzurePostgreSqlTable",
+				"typeProperties": {
+					"tableName": "\"public\".\"hcp\"",
+					"format": {
+						"type": "TextFormat",
+						"encodingName": "gb2312"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare_anon_china')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzurePostgreSqlClaus')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzurePostgreSql",
+				"typeProperties": {
+					"connectionString": "[parameters('AzurePostgreSqlClaus_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntimeClaus",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntimeClaus')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Dashboard Tables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LoopOverTables",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "DropDashboardTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.tableList",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Copy Table",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzurePostgreSqlSource",
+											"query": {
+												"value": "SELECT * FROM @{item().TABLE_NAME}",
+												"type": "Expression"
+											}
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000,
+											"preCopyScript": {
+												"value": "delete from @{item().TABLE_NAME};",
+												"type": "Expression"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "Telecare_Internal",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Dashboard",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": {
+													"value": "[concat('[', '@{item().TABLE_NAME}]')]",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "CreateHDMS",
+						"description": "Create hearingdevicemodelservice table",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ExtractChannels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[create_hearingdevicemodelservice]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "CreateDashboardTables",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "CreateHDMS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[create_dashboard_tables]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ExtractFalseHCPs",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LoopOverTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id\nfrom hcp\nwhere lower (email)  like '%sivantos%' and email not like 'renata.furtado%' \nor lower (email) like (lower('%audibene%'))\nor lower (email) like '%fdp%'\nor lower (email) like (lower('%123%'))\nor lower (email) like (lower('%234%'))\nor lower (email) like (lower('%423%'))\nor lower (email) like (lower('%signia-pro%')) \nor lower (email) like (lower('%test%'))\nor lower (email) like (lower('%demo%'))\nor lower (email) like (lower('%giselemunhoes%'))\nor lower (email) like '%filiale%'\nor lower (email) like '%mktsiva%'\nor lower (email) like '%irasema%'\nor lower (email) like '%redcom%'\nor lower (street1) like '%henri%' \nor lower (street1) like '%hd100%'\nor lower (street1) like '%hd50%'\nor lower (street1) like '%sivantos%'\nor lower (street1) like '%hauser alle%'\nor lower (street1) like '%donato-%'\nor name like '%Test-HCP%'\nor name like '%signia%'\nor name like '%Test_HCP%'\nor name like '%Test HCP%'\nor name like '%HCP-Test%'\nor name like '%HCP Test%'\nor name like 'test'\nor name like '%ExportSales%'\nor lower (name) like '%[test%'\nor lower (name) like '%hcp%test%'\nor lower (name) like '%seminar%'\nor lower (name) like '%dummy%'\nor lower (name) like '%sivantos%' and  email not like 'renata.furtado%'\nor lower (name) like '%test%' and  name not like '%studio%'\nor zipcode like '%1234%'\nor account_state is null;"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from false_hcps;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "false_hcps"
+								}
+							}
+						]
+					},
+					{
+						"name": "ExtractLocations",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ExtractFalseHCPs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id, city, zipcode from hcp"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from location;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "location"
+								}
+							}
+						]
+					},
+					{
+						"name": "ExtractChannels",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ExtractLocations",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id, case when a.domain = 'hear.com' then 'Hear.com'\n\t\t\t\twhen a.domain = 'comunicareaparelhosauditivos.com' then 'Comunicare'\n\t\t\t\twhen a.domain = 'sivantos.com' then 'Sivantos'\n\t\t\t\twhen a.domain = 'hearusa.com' then 'HearUSA'\n\t\t\t\telse 'Channel ' || (rnum-3)::text end as channel\nfrom\n(select id, substring(email, '.*@(.*)') as domain\nfrom hcp) a\njoin\n(select num_customer, domain, row_number() OVER () as rnum\nfrom (\nselect count(customer.id) as num_customer, substring(hcp.email, '.*@(.*)') as domain\nfrom hcp join customer on hcp.id = customer.hcp_id\nwhere substring(hcp.email, '.*@(.*)') <> 'gmail.com' and substring(hcp.email, '.*@(.*)') <> 'hotmail.com' and substring(hcp.email, '.*@(.*)') <> 'yahoo.com' and substring(hcp.email, '.*@(.*)') <> 'sivantos.com' and substring(hcp.email, '.*@(.*)') <> 'signiausa.com' and substring(hcp.email, '.*@(.*)') <> 'audibene.de'\ngroup by domain\norder by num_customer desc\nlimit 10\n) b) b2\non a.domain = b2.domain"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from channel;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "channel"
+								}
+							}
+						]
+					},
+					{
+						"name": "DropDashboardTables",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[drop_dashboard_tables]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"parameters": {
+					"tableList": {
+						"type": "Array"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare Dashboard')]",
+				"[concat(variables('factoryId'), '/datasets/Telecare_Prod')]",
+				"[concat(variables('factoryId'), '/datasets/Dashboard')]",
+				"[concat(variables('factoryId'), '/datasets/Telecare_Internal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Dashboard Tables_China')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LoopOverTables",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "DropDashboardTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.tableList",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Copy Table",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzurePostgreSqlSource",
+											"query": {
+												"value": "SELECT * FROM @{item().TABLE_NAME}",
+												"type": "Expression"
+											}
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000,
+											"preCopyScript": {
+												"value": "delete from @{item().TABLE_NAME};",
+												"type": "Expression"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "Telecare_Internal_China",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Dashboard_China",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "[concat('[', '@{item().TABLE_NAME}]')]"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "CreateHDMS",
+						"description": "Create hearingdevicemodelservice table",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ExtractChannels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[create_hearingdevicemodelservice]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard China",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "CreateDashboardTables",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "CreateHDMS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[create_dashboard_tables]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard China",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ExtractFalseHCPs",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LoopOverTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id\nfrom hcp\nwhere lower (email)  like '%sivantos%' and email not like 'renata.furtado%' \nor lower (email) like (lower('%audibene%'))\nor lower (email) like '%fdp%'\nor lower (email) like (lower('%123%'))\nor lower (email) like (lower('%234%'))\nor lower (email) like (lower('%423%'))\nor lower (email) like (lower('%signia-pro%')) \nor lower (email) like (lower('%test%'))\nor lower (email) like (lower('%demo%'))\nor lower (email) like (lower('%giselemunhoes%'))\nor lower (email) like '%filiale%'\nor lower (email) like '%mktsiva%'\nor lower (email) like '%irasema%'\nor lower (email) like '%redcom%'\nor lower (street1) like '%henri%' \nor lower (street1) like '%hd100%'\nor lower (street1) like '%hd50%'\nor lower (street1) like '%sivantos%'\nor lower (street1) like '%hauser alle%'\nor lower (street1) like '%donato-%'\nor name like '%Test-HCP%'\nor name like '%signia%'\nor name like '%Test_HCP%'\nor name like '%Test HCP%'\nor name like '%HCP-Test%'\nor name like '%HCP Test%'\nor name like 'test'\nor name like '%ExportSales%'\nor lower (name) like '%[test%'\nor lower (name) like '%hcp%test%'\nor lower (name) like '%seminar%'\nor lower (name) like '%dummy%'\nor lower (name) like '%sivantos%' and  email not like 'renata.furtado%'\nor lower (name) like '%test%' and  name not like '%studio%'\nor zipcode like '%1234%'\nor account_state is null;"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from false_hcps;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod_China",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard_China",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "false_hcps"
+								}
+							}
+						]
+					},
+					{
+						"name": "ExtractLocations",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ExtractFalseHCPs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id, city, zipcode from hcp"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from location;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod_China",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard_China",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "location"
+								}
+							}
+						]
+					},
+					{
+						"name": "ExtractChannels",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ExtractLocations",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "select id, case when a.domain = 'hear.com' then 'Hear.com'\n\t\t\t\twhen a.domain = 'comunicareaparelhosauditivos.com' then 'Comunicare'\n\t\t\t\twhen a.domain = 'sivantos.com' then 'Sivantos'\n\t\t\t\twhen a.domain = 'hearusa.com' then 'HearUSA'\n\t\t\t\telse 'Channel ' || (rnum-3)::text end as channel\nfrom\n(select id, substring(email, '.*@(.*)') as domain\nfrom hcp) a\njoin\n(select num_customer, domain, row_number() OVER () as rnum\nfrom (\nselect count(customer.id) as num_customer, substring(hcp.email, '.*@(.*)') as domain\nfrom hcp join customer on hcp.id = customer.hcp_id\nwhere substring(hcp.email, '.*@(.*)') <> 'gmail.com' and substring(hcp.email, '.*@(.*)') <> 'hotmail.com' and substring(hcp.email, '.*@(.*)') <> 'yahoo.com' and substring(hcp.email, '.*@(.*)') <> 'sivantos.com' and substring(hcp.email, '.*@(.*)') <> 'signiausa.com' and substring(hcp.email, '.*@(.*)') <> 'audibene.de'\ngroup by domain\norder by num_customer desc\nlimit 10\n) b) b2\non a.domain = b2.domain"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": "delete from channel;"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Telecare_Prod_China",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dashboard_China",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "channel"
+								}
+							}
+						]
+					},
+					{
+						"name": "DropDashboardTables",
+						"description": "",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'dbo].[drop_dashboard_tables]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Telecare Dashboard China",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"parameters": {
+					"tableList": {
+						"type": "Array"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Telecare Dashboard China')]",
+				"[concat(variables('factoryId'), '/datasets/Telecare_Prod_China')]",
+				"[concat(variables('factoryId'), '/datasets/Dashboard_China')]",
+				"[concat(variables('factoryId'), '/datasets/Telecare_Internal_China')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupTableList",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_NAME in ('hcp', 'clouduser', 'accountwhitelist', 'organization', 'employee', 'security_user', 'customer', 'journey', 'interaction', 'satisfactioninteraction', 'assignment', 'hearingdeviceselection', 'hearingdevicemodel', 'mobiledevice')"
+							},
+							"dataset": {
+								"referenceName": "Telecare_Internal",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "TriggerCopy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "LookupTableList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Copy Dashboard Tables",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"tableList": {
+									"value": "@activity('LookupTableList').output.value",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Telecare_Internal')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Dashboard Tables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger Pipeline_China')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupTableList",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzurePostgreSqlSource",
+								"query": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_NAME in ('hcp', 'clouduser', 'accountwhitelist', 'organization', 'employee', 'security_user', 'customer', 'journey', 'interaction', 'satisfactioninteraction', 'assignment', 'hearingdeviceselection', 'hearingdevicemodel', 'mobiledevice')"
+							},
+							"dataset": {
+								"referenceName": "Telecare_Internal_China",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "TriggerCopy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "LookupTableList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Copy Dashboard Tables_China",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"tableList": {
+									"value": "@activity('LookupTableList').output.value",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Telecare_Internal_China')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Dashboard Tables_China')]"
+			]
+		}
+	]
+}
