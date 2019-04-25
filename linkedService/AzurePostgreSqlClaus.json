@@ -1,0 +1,14 @@
+{
+	"name": "AzurePostgreSqlClaus",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzurePostgreSql",
+		"typeProperties": {
+			"connectionString": ""
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntimeClaus",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

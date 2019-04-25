@@ -1,0 +1,14 @@
+{
+	"name": "Telecare_Internal",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Telecare_Internal",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzurePostgreSqlTable",
+		"typeProperties": {
+			"tableName": "dummyName"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

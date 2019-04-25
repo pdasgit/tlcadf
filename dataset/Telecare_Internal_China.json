@@ -1,0 +1,11 @@
+{
+	"name": "Telecare_Internal_China",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Telecare_Internal_China",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzurePostgreSqlTable"
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,291 @@
+{
+	"name": "Copy Dashboard Tables",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoopOverTables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "DropDashboardTables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tableList",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Copy Table",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT * FROM @{item().TABLE_NAME}",
+										"type": "Expression"
+									}
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000,
+									"preCopyScript": {
+										"value": "delete from @{item().TABLE_NAME};",
+										"type": "Expression"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Telecare_Internal",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Dashboard",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "[@{item().TABLE_NAME}]",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "CreateHDMS",
+				"description": "Create hearingdevicemodelservice table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ExtractChannels",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[create_hearingdevicemodelservice]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Telecare Dashboard",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "CreateDashboardTables",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "CreateHDMS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[create_dashboard_tables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Telecare Dashboard",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ExtractFalseHCPs",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "LoopOverTables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "select id\nfrom hcp\nwhere lower (email)  like '%sivantos%' and email not like 'renata.furtado%' \nor lower (email) like (lower('%audibene%'))\nor lower (email) like '%fdp%'\nor lower (email) like (lower('%123%'))\nor lower (email) like (lower('%234%'))\nor lower (email) like (lower('%423%'))\nor lower (email) like (lower('%signia-pro%')) \nor lower (email) like (lower('%test%'))\nor lower (email) like (lower('%demo%'))\nor lower (email) like (lower('%giselemunhoes%'))\nor lower (email) like '%filiale%'\nor lower (email) like '%mktsiva%'\nor lower (email) like '%irasema%'\nor lower (email) like '%redcom%'\nor lower (street1) like '%henri%' \nor lower (street1) like '%hd100%'\nor lower (street1) like '%hd50%'\nor lower (street1) like '%sivantos%'\nor lower (street1) like '%hauser alle%'\nor lower (street1) like '%donato-%'\nor name like '%Test-HCP%'\nor name like '%signia%'\nor name like '%Test_HCP%'\nor name like '%Test HCP%'\nor name like '%HCP-Test%'\nor name like '%HCP Test%'\nor name like 'test'\nor name like '%ExportSales%'\nor lower (name) like '%[test%'\nor lower (name) like '%hcp%test%'\nor lower (name) like '%seminar%'\nor lower (name) like '%dummy%'\nor lower (name) like '%sivantos%' and  email not like 'renata.furtado%'\nor lower (name) like '%test%' and  name not like '%studio%'\nor zipcode like '%1234%'\nor account_state is null;"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "delete from false_hcps;"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Telecare_Prod",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Dashboard",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "false_hcps"
+						}
+					}
+				]
+			},
+			{
+				"name": "ExtractLocations",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ExtractFalseHCPs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "select id, city, zipcode from hcp"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "delete from location;"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Telecare_Prod",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Dashboard",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "location"
+						}
+					}
+				]
+			},
+			{
+				"name": "ExtractChannels",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ExtractLocations",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "select id, case when a.domain = 'hear.com' then 'Hear.com'\n\t\t\t\twhen a.domain = 'comunicareaparelhosauditivos.com' then 'Comunicare'\n\t\t\t\twhen a.domain = 'sivantos.com' then 'Sivantos'\n\t\t\t\twhen a.domain = 'hearusa.com' then 'HearUSA'\n\t\t\t\telse 'Channel ' || (rnum-3)::text end as channel\nfrom\n(select id, substring(email, '.*@(.*)') as domain\nfrom hcp) a\njoin\n(select num_customer, domain, row_number() OVER () as rnum\nfrom (\nselect count(customer.id) as num_customer, substring(hcp.email, '.*@(.*)') as domain\nfrom hcp join customer on hcp.id = customer.hcp_id\nwhere substring(hcp.email, '.*@(.*)') <> 'gmail.com' and substring(hcp.email, '.*@(.*)') <> 'hotmail.com' and substring(hcp.email, '.*@(.*)') <> 'yahoo.com' and substring(hcp.email, '.*@(.*)') <> 'sivantos.com' and substring(hcp.email, '.*@(.*)') <> 'signiausa.com' and substring(hcp.email, '.*@(.*)') <> 'audibene.de'\ngroup by domain\norder by num_customer desc\nlimit 10\n) b) b2\non a.domain = b2.domain"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": "delete from channel;"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Telecare_Prod",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Dashboard",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "channel"
+						}
+					}
+				]
+			},
+			{
+				"name": "DropDashboardTables",
+				"description": "",
+				"type": "SqlServerStoredProcedure",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[drop_dashboard_tables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "Telecare Dashboard",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"tableList": {
+				"type": "Array"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,10 @@
+{
+	"name": "Telecare_Internal_China",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzurePostgreSql",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}
